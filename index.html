@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOPI — Uji Organoleptik</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#08060f;
+    --bg-2:#0d0a1a;
+    --panel:#100c1f;
+    --line:#231a3d;
+    --blue:#00e5ff;
+    --pink:#ff2e88;
+    --text:#eaf6ff;
+    --muted:#8a8fb0;
+    --danger:#ff5470;
+    --ok:#39ffb0;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      linear-gradient(var(--bg-2) 1px, transparent 1px) 0 0/100% 42px,
+      linear-gradient(90deg, var(--bg-2) 1px, transparent 1px) 0 0/42px 100%,
+      radial-gradient(1200px 600px at 15% -10%, rgba(0,229,255,.10), transparent 60%),
+      radial-gradient(1000px 700px at 110% 10%, rgba(255,46,136,.10), transparent 60%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Rajdhani',sans-serif;
+    font-size:17px;
+    min-height:100vh;
+    padding:32px 16px 80px;
+  }
+  h1,h2,.brand{
+    font-family:'Orbitron',sans-serif;
+  }
+  .wrap{max-width:760px;margin:0 auto;}
+
+  .brand{
+    text-align:center;
+    font-size:clamp(2.2rem,7vw,3.4rem);
+    font-weight:800;
+    letter-spacing:.12em;
+    margin:0 0 6px;
+    color:var(--text);
+    text-shadow:
+      0 0 6px rgba(0,229,255,.9),
+      0 0 22px rgba(0,229,255,.45),
+      0 0 2px rgba(255,46,136,.9);
+  }
+  .sub{
+    text-align:center;
+    color:var(--muted);
+    margin:0 0 34px;
+    font-size:1.05rem;
+    letter-spacing:.03em;
+  }
+
+  .panel{
+    position:relative;
+    background:linear-gradient(180deg, rgba(20,15,38,.9), rgba(12,9,22,.9));
+    border:1px solid var(--line);
+    padding:26px 22px;
+    margin-bottom:24px;
+  }
+  /* HUD corner brackets */
+  .panel::before,.panel::after,
+  .panel .cB1,.panel .cB2{
+    content:"";
+    position:absolute;
+    width:18px;height:18px;
+    border-color:var(--blue);
+    border-style:solid;
+    border-width:0;
+    filter:drop-shadow(0 0 4px rgba(0,229,255,.8));
+  }
+  .panel::before{top:-1px;left:-1px;border-top-width:2px;border-left-width:2px;}
+  .panel::after{bottom:-1px;right:-1px;border-bottom-width:2px;border-right-width:2px;border-color:var(--pink);filter:drop-shadow(0 0 4px rgba(255,46,136,.8));}
+
+  .panel h2{
+    font-size:1.05rem;
+    letter-spacing:.08em;
+    color:var(--blue);
+    margin:0 0 18px;
+    text-transform:uppercase;
+    text-shadow:0 0 8px rgba(0,229,255,.6);
+  }
+
+  label{
+    display:block;
+    font-weight:600;
+    margin:14px 0 6px;
+    color:var(--text);
+  }
+  input[type="text"], select{
+    width:100%;
+    padding:11px 12px;
+    background:#0a0716;
+    border:1px solid var(--line);
+    color:var(--text);
+    font-family:'Rajdhani',sans-serif;
+    font-size:1.05rem;
+    outline:none;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  input[type="text"]:focus, select:focus{
+    border-color:var(--blue);
+    box-shadow:0 0 0 3px rgba(0,229,255,.15);
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:6px;
+  }
+  th,td{
+    border:1px solid var(--line);
+    padding:10px 8px;
+    text-align:center;
+    font-size:.98rem;
+  }
+  thead th{
+    color:var(--pink);
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    font-size:.82rem;
+    background:rgba(255,46,136,.06);
+  }
+  tbody th{
+    text-align:left;
+    color:var(--blue);
+    font-weight:700;
+    background:rgba(0,229,255,.05);
+    white-space:nowrap;
+  }
+  .scale-hint{
+    color:var(--muted);
+    font-size:.82rem;
+    margin-top:6px;
+    line-height:1.5;
+  }
+
+  select.score{
+    padding:8px 6px;
+    text-align:center;
+    text-align-last:center;
+  }
+
+  .status-other{
+    display:none;
+    margin-top:8px;
+  }
+
+  button#submitBtn{
+    width:100%;
+    margin-top:8px;
+    padding:15px;
+    background:linear-gradient(90deg, var(--blue), var(--pink));
+    border:none;
+    color:#05040a;
+    font-family:'Orbitron',sans-serif;
+    font-weight:800;
+    letter-spacing:.08em;
+    font-size:1rem;
+    cursor:pointer;
+    text-transform:uppercase;
+    transition:filter .15s, transform .1s;
+  }
+  button#submitBtn:hover{filter:brightness(1.12);}
+  button#submitBtn:active{transform:scale(.99);}
+  button#submitBtn:disabled{
+    background:#26203a;
+    color:var(--muted);
+    cursor:not-allowed;
+  }
+
+  .error-msg{
+    color:var(--danger);
+    font-size:.92rem;
+    margin-top:12px;
+    display:none;
+  }
+
+  .done-screen{
+    display:none;
+    text-align:center;
+    padding:50px 20px;
+  }
+  .done-screen .glyph{
+    font-family:'Orbitron',sans-serif;
+    font-size:3rem;
+    color:var(--ok);
+    text-shadow:0 0 18px rgba(57,255,176,.7);
+    margin-bottom:10px;
+  }
+  .done-screen p{color:var(--muted);font-size:1.05rem;}
+
+  @media (max-width:600px){
+    th,td{font-size:.85rem;padding:7px 4px;}
+    .panel{padding:18px 14px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1 class="brand">INVENTION EGA</h1>
+  <p class="sub">Uji Organoleptik — Penilaian Panelis</p>
+
+  <form id="mainForm">
+
+    <section class="panel">
+      <h2>Identitas Panelis</h2>
+
+      <label for="nama">Nama</label>
+      <input type="text" id="nama" name="nama" required autocomplete="off">
+
+      <label for="status">Status</label>
+      <select id="status" name="status" required>
+        <option value="" disabled selected>Pilih status</option>
+        <option value="Siswa">Siswa</option>
+        <option value="Guru">Guru</option>
+        <option value="Lainnya">Lainnya</option>
+      </select>
+
+      <div class="status-other" id="statusOtherWrap">
+        <label for="statusOther">Sebutkan status</label>
+        <input type="text" id="statusOther" name="statusOther" autocomplete="off">
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Penilaian Sampel Kopi Fermentasi</h2>
+      <p class="scale-hint">
+        Skala 1–5 &nbsp;|&nbsp;
+        <strong>Aroma:</strong> 1=sangat khas &amp; kuat, 5=sangat tidak kuat &nbsp;|&nbsp;
+        <strong>Warna:</strong> 1=sangat menarik, 5=sangat tidak menarik &nbsp;|&nbsp;
+        <strong>Rasa:</strong> 1=sangat asam, 5=sangat tidak asam
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Sampel</th>
+            <th>Aroma</th>
+            <th>Warna</th>
+            <th>Rasa</th>
+          </tr>
+        </thead>
+        <tbody id="scoreTableBody">
+          <!-- diisi oleh JS -->
+        </tbody>
+      </table>
+    </section>
+
+    <button type="submit" id="submitBtn">Kirim Penilaian</button>
+    <p class="error-msg" id="errorMsg">Mohon lengkapi semua isian sebelum mengirim.</p>
+  </form>
+
+  <div class="done-screen" id="doneScreen">
+    <div class="glyph">✓</div>
+    <p>Terima kasih! Penilaianmu berhasil dikirim.</p>
+  </div>
+
+</div>
+
+<script>
+  // ============================================================
+  // GANTI URL INI dengan URL Web App Google Apps Script kamu
+  // (diakhiri /exec)
+  // ============================================================
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzNhl6SLhDOwxVWIecoESvCWlCqfKtMwCZxag-a-97feoXIiAi2h7eCqSiX--65y5Bs/exec";
+
+  const SAMPLES = ["24 Jam", "48 Jam", "72 Jam"];
+  const STORAGE_KEY = "kopi_sudah_submit";
+
+  const tbody = document.getElementById('scoreTableBody');
+  SAMPLES.forEach(function(sampleName, i){
+    const tr = document.createElement('tr');
+
+    const th = document.createElement('th');
+    th.textContent = sampleName;
+    tr.appendChild(th);
+
+    ['aroma','warna','rasa'].forEach(function(crit){
+      const td = document.createElement('td');
+      const sel = document.createElement('select');
+      sel.className = 'score';
+      sel.required = true;
+      sel.name = crit + '_' + i;
+      sel.dataset.crit = crit;
+      sel.dataset.sampleIndex = i;
+
+      const optDefault = document.createElement('option');
+      optDefault.value = '';
+      optDefault.disabled = true;
+      optDefault.selected = true;
+      optDefault.textContent = '-';
+      sel.appendChild(optDefault);
+
+      for(let v=1; v<=5; v++){
+        const opt = document.createElement('option');
+        opt.value = v;
+        opt.textContent = v;
+        sel.appendChild(opt);
+      }
+      td.appendChild(sel);
+      tr.appendChild(td);
+    });
+
+    tbody.appendChild(tr);
+  });
+
+  // Tampilkan input "sebutkan status" kalau pilih Lainnya
+  const statusSelect = document.getElementById('status');
+  const statusOtherWrap = document.getElementById('statusOtherWrap');
+  const statusOtherInput = document.getElementById('statusOther');
+  statusSelect.addEventListener('change', function(){
+    if(statusSelect.value === 'Lainnya'){
+      statusOtherWrap.style.display = 'block';
+      statusOtherInput.required = true;
+    } else {
+      statusOtherWrap.style.display = 'none';
+      statusOtherInput.required = false;
+    }
+  });
+
+  const form = document.getElementById('mainForm');
+  const errorMsg = document.getElementById('errorMsg');
+  const submitBtn = document.getElementById('submitBtn');
+  const doneScreen = document.getElementById('doneScreen');
+
+  function alreadySubmitted(){
+    return localStorage.getItem(STORAGE_KEY) === '1';
+  }
+
+  function showDone(){
+    form.style.display = 'none';
+    doneScreen.style.display = 'block';
+  }
+
+  if(alreadySubmitted()){
+    showDone();
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    errorMsg.style.display = 'none';
+
+    if(!form.checkValidity()){
+      form.reportValidity();
+      errorMsg.style.display = 'block';
+      return;
+    }
+
+    const nama = document.getElementById('nama').value.trim();
+    let status = statusSelect.value;
+    if(status === 'Lainnya'){
+      status = statusOtherInput.value.trim();
+    }
+
+    const penilaian = SAMPLES.map(function(sampleName, i){
+      return {
+        sampel: sampleName,
+        aroma: form.querySelector('[name="aroma_'+i+'"]').value,
+        warna: form.querySelector('[name="warna_'+i+'"]').value,
+        rasa: form.querySelector('[name="rasa_'+i+'"]').value
+      };
+    });
+
+    const payload = { nama: nama, status: status, penilaian: penilaian };
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'MENGIRIM...';
+
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    })
+    .then(function(){
+      localStorage.setItem(STORAGE_KEY, '1');
+      showDone();
+    })
+    .catch(function(){
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Kirim Penilaian';
+      errorMsg.textContent = 'Gagal mengirim. Periksa koneksi internet dan coba lagi.';
+      errorMsg.style.display = 'block';
+    });
+  });
+</script>
+</body>
+</html>
