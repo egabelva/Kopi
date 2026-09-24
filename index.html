@@ -207,8 +207,8 @@
 <body>
 <div class="wrap">
 
-  <h1 class="brand">INVENTION EGA</h1>
-  <p class="sub">Uji Organoleptik — Penilaian Panelis</p>
+  <h1 class="brand">DATA PANELIS</h1>
+  <p class="sub">Uji Organoleptik — Invention Ega Belva</p>
 
   <form id="mainForm">
 
@@ -275,7 +275,6 @@
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxZyUgNzM1fKNAcyzBvs_lvquijt0VEhqZirZMnyWUdSibQ8S95UQSgRf4fQoYJNr0Ccg/exec";
 
   const SAMPLES = ["24 Jam", "48 Jam", "72 Jam"];
-  const STORAGE_KEY = "kopi_sudah_submit";
 
   const tbody = document.getElementById('scoreTableBody');
   SAMPLES.forEach(function(sampleName, i){
@@ -333,17 +332,9 @@
   const submitBtn = document.getElementById('submitBtn');
   const doneScreen = document.getElementById('doneScreen');
 
-  function alreadySubmitted(){
-    return localStorage.getItem(STORAGE_KEY) === '1';
-  }
-
   function showDone(){
     form.style.display = 'none';
     doneScreen.style.display = 'block';
-  }
-
-  if(alreadySubmitted()){
-    showDone();
   }
 
   form.addEventListener('submit', function(e){
@@ -383,7 +374,6 @@
       body: JSON.stringify(payload)
     })
     .then(function(){
-      localStorage.setItem(STORAGE_KEY, '1');
       showDone();
     })
     .catch(function(){
